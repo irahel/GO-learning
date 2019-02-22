@@ -39,6 +39,7 @@ func main() {
 	ErrorHandle(err)
 	fmt.Println("Server Working...")
     defer ServerConn.Close()
+    defer fmt.Println("Exiting")
  
     buf := make([]byte, 1024)
 	fmt.Println("Waiting Mensages...")
