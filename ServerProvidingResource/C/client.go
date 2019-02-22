@@ -4,9 +4,9 @@ package main
 import (
 	"fmt"
     "net"
-	"time"
-	"os"
-    "strconv"
+	"os"	
+	"bufio"
+	"strings"
 )
 
 func ErrorHandle(err error){
@@ -15,6 +15,12 @@ func ErrorHandle(err error){
 		fmt.Println("Exitting") 
 		os.Exit(0)
     }
+}
+
+func PrintErrorIfExists(err error){
+    if err != nil {
+        fmt.Println("We have a error: ",err)
+    } 
 }
  
 func main(){
@@ -33,22 +39,27 @@ func main(){
 	
 	fmt.Println("Client Connected...")
  
-    defer Conn.Close()
-    i := 0
-    for {
-        msg_pack := strconv.Itoa(i)
-        i++
-		buf := []byte(msg_pack)
+	defer Conn.Close()
 		
-		fmt.Println("sending mensage: ", msg_pack)
+	reader := bufio.NewReader(os.Stdin)
+    
+    for {
+		fmt.Print("Enter text: ")
+        msgPack, _ := reader.ReadString('\n')
+		msgPack = strings.TrimSuffix(msgPack, "\n")
+		
+		buf := []byte(msgPack)
+		
+		fmt.Println("sending mensage: ", msgPack)
 
 		_,err := Conn.Write(buf)
+		PrintErrorIfExists(err)
 		
-        if err != nil {
-            fmt.Println(msg_pack, err)
-		}
-		
-        time.Sleep(time.Second * 1)
+		bufRecived := make([]byte, 1024)
+		n,_,err := Conn.ReadFromUDP(bufRecived)
+        PrintErrorIfExists(err)
+
+        fmt.Println("Received ",string(bufRecived[0:n]), " from server")
     }
 
 }
