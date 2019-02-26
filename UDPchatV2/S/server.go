@@ -52,6 +52,16 @@ func MapContainsValue(ToCheckValue *net.UDPAddr, collection map[string]*net.UDPA
     return false
 }
 
+func GetKeyFromValue(ToCheckValue *net.UDPAddr, collection map[string]*net.UDPAddr) string{
+    returne := ""
+    for key, value := range collection {
+        if value.String() == ToCheckValue.String(){            
+            returne = key
+        }
+    }
+    return returne
+}
+
 func main() {
     /*Initializing var's*/
     globalNext = 0
@@ -89,12 +99,17 @@ func main() {
                 continue
             }
         }
-
-        fmt.Println("Received ",msg, " from ",addr)
+        /*Who send*/
+        nick := GetKeyFromValue(addr, clientsConnected)
+        fmt.Println("Received ",msg, " from ",nick+">"+addr.String() )
         fmt.Println("Sending Response to all")                    
 
         /*Sending for ALL*/
-        for nick, adrr := range clientsConnected {
+        for _, adrr := range clientsConnected {
+            //do not send it to yourself
+            if adrr.String() == addr.String(){
+                continue
+            }
             messageBack := []byte("["+nick+"]: "+ msg)
             _, err = ServerConn.WriteToUDP(messageBack, adrr)
             PrintErrorIfExists(err)
