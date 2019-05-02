@@ -1,0 +1,2 @@
+# GO-learning
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/209351de93fa4042b5b2422a962e11fd)](https://app.codacy.com/app/irahel/GO-learning?utm_source=github.com&utm_medium=referral&utm_content=irahel/GO-learning&utm_campaign=Badge_Grade_Settings)
